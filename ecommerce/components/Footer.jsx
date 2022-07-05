@@ -6,8 +6,8 @@ const Footer = () => {
     <div className='footer-container'>
       <p>2022 Nachito Store All rights reserverd</p>
       <p className='icons'>
-        <AiFillInstagram />
-        <AiOutlineTwitter />
+        <a href='https://www.instagram.com/nch.exe' target='_black'><AiFillInstagram /></a>
+        <a href='https://twitter.com/RasputinPte' target='_black'><AiOutlineTwitter /></a>
       </p>
     </div>
   )
