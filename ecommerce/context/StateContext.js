@@ -2,17 +2,28 @@ import React, {createContext, useContext, useState, useEffect} from 'react';
 import { toast } from 'react-hot-toast';
 
 const Context = createContext();
+if (typeof window !== 'undefined') {
+    //here `window` is available
+    var cartFromLocalStorage = JSON.parse(window.localStorage.getItem('cart' || '[]'));
+    var quantitiesFromLocalStorage = JSON.parse(window.localStorage.getItem('quantities' || '0'));
+    
+  }
 
 export const StateContext = ({ children }) => {
+    let quantitiesLStoNumber = parseInt(quantitiesFromLocalStorage);
     const [showCart, setShowCart] = useState(false);
-    const [cartItems, setCartItems] = useState([]);
+    const [cartItems, setCartItems] = useState(cartFromLocalStorage);
     const [totalPrice, setTotalPrice] = useState(0);
     const [totalQuantities, setTotalQuantities] = useState(0);
     const [qty, setQty] = useState(1);
+    console.log(quantitiesFromLocalStorage)
 
     let foundProduct;
     let index;
-
+    useEffect(() =>{
+        window.localStorage.setItem('cart', JSON.stringify(cartItems))
+        window.localStorage.setItem('quantities', JSON.stringify(totalQuantities))
+    },[cartItems])
     const onAdd = (product, quantity) => {
         const checkProductInCart = cartItems.find(item => item._id === product._id )
         setTotalPrice((prevTotalPrice) => prevTotalPrice + product.price * quantity)
@@ -29,8 +40,11 @@ export const StateContext = ({ children }) => {
         } else {
             product.quantity = quantity;
             setCartItems([...cartItems, { ...product}])
+            window.localStorage.removeItem('cart')
+            window.localStorage.setItem('cart',JSON.stringify(cartItems)) 
         }
-        toast.success(`${qty} ${product.name} added to the cart.`);
+        toast.success(`${qty} ${product.name} added to the cart.`);       
+        
     }
 
     const toggleCartItemQuantity = (id, value) =>{
@@ -65,6 +79,8 @@ export const StateContext = ({ children }) => {
         setTotalPrice(prevTotalPrice => prevTotalPrice - foundProduct.price * foundProduct.quantity);
         setTotalQuantities(prevTotalQuantities => prevTotalQuantities - foundProduct.quantity)
         setCartItems(newCartItems)
+        window.localStorage.removeItem('cart');
+        
     }
     const incQty = () => {
         setQty((prevQty) => prevQty + 1);

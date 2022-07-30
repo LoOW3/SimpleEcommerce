@@ -15,6 +15,7 @@ import getStripe from "../lib/getStripe";
 
 const Cart = () => {
   const cartRef = useRef();
+  let cartJSON = JSON.parse(window.localStorage.getItem('cart'))
   const { totalPrice, totalQuantities, cartItems, setShowCart, toggleCartItemQuantity, onRemove } =
     useStateContext();
 
@@ -49,7 +50,7 @@ const Cart = () => {
           <span className="heading">Your Cart</span>
           <span className="cart-num-items">({totalQuantities} items)</span>
         </button>
-        {cartItems.length < 1 && (
+        {cartJSON.length < 1 && (
           <div className="empty-cart">
             <AiOutlineShopping size={150} />
             <h3> Your shopping bag is empty</h3>
@@ -65,8 +66,8 @@ const Cart = () => {
           </div>
         )}
         <div className="product-container">
-          {cartItems.length >= 1 &&
-            cartItems.map((item, index) => (
+          {cartJSON.length >= 1 &&
+            cartJSON.map((item, index) => (
               <div className="product" key={item._id}>
                 <img
                   src={urlFor(item?.image[0])}
@@ -100,7 +101,7 @@ const Cart = () => {
               </div>
             ))}
         </div>
-        {cartItems.length >= 1 && (
+        {cartJSON.length >= 1 && (
           <div className="cart-bottom">
             <div className="total">
               <h3>Subtotal:</h3>
